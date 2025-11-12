@@ -1,0 +1,25 @@
+# Deep Learning (CPU)
+torch
+torchvision
+
+# Data Science (Python 3.12 ok)
+numpy
+pandas
+scikit-learn
+
+# MLOps
+mlflow
+dvc
+
+# Viz
+matplotlib
+seaborn
+
+# Utils
+tqdm
+requests
+
+# Notebooks
+jupyter
+ipywidgets
+ipykernel
