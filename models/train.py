@@ -198,7 +198,7 @@ class TurbofanTrainer:
         # Documentation: https://www.mlflow.org/docs/latest/python_api/mlflow.html#mlflow.set_experiment
         #
         # YOUR CODE HERE (1 line):
-
+        mlflow.set_experiment(experiment_name)
 
         logger.info(f" MLflow experiment: {experiment_name}")
 
@@ -214,8 +214,9 @@ class TurbofanTrainer:
         #
         # YOUR CODE HERE (1 line - then indent everything below):
         if True:  # TODO: Replace this line with: with mlflow.start_run(run_name=run_name) as run:
+            with mlflow.start_run(run_name=run_name) as run:
 
-            logger.info(f" MLflow run started")
+                logger.info(f" MLflow run started")
 
             # =============================================================
             # TODO 3: Log hyperparameters
@@ -233,7 +234,11 @@ class TurbofanTrainer:
             #
             # YOUR CODE HERE (5 lines):
 
-
+            mlflow.log_param("epochs", epochs)
+            mlflow.log_param("learning_rate", lr)
+            mlflow.log_param("weight_decay", weight_decay)
+            mlflow.log_param("batch_size", self.train_loader.batch_size)
+            mlflow.log_param("encoding_dim", self.model.encoding_dim)
 
 
 
@@ -281,7 +286,7 @@ class TurbofanTrainer:
                 #
                 # YOUR CODE HERE (2 lines):
 
-
+                mlflow.pytorch.log_model(self.model, "model")
 
                 # Print progress
                 print(f"Epoch {epoch+1:3d}/{epochs} | "
