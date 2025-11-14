@@ -116,7 +116,12 @@ def create_lime_explainer(background_data, feature_names, mode='regression'):
     """
     # TODO 3: Students complete this
     # HINT: Use lime_tabular.LimeTabularExplainer
-    raise NotImplementedError("TODO 3: Create LIME TabularExplainer")
+    explainer = lime_tabular.LimeTabularExplainer(
+    training_data=background_data,
+    feature_names=feature_names,
+    mode=mode,
+    verbose=False)
+    return explainer
 
 
 def explain_instance_lime(explainer, instance, predict_fn, num_features=14, num_samples=500):
@@ -140,8 +145,14 @@ def explain_instance_lime(explainer, instance, predict_fn, num_features=14, num_
     # TODO 4: Students complete this
     # HINT: Use explainer.explain_instance(...)
     # HINT: Extract weights using exp.as_list()
-    raise NotImplementedError("TODO 4: Generate LIME explanation")
-
+    explanation = explainer.explain_instance(
+    data_row=instance,
+    predict_fn=predict_fn,
+    num_features=num_features,
+    num_samples=num_samples
+    )
+    feature_weights = dict(explanation.as_list())
+    return explanation, feature_weights
 
 def compare_shap_lime(shap_values, lime_weights, feature_names):
     """
