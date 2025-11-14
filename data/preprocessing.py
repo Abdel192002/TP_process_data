@@ -603,7 +603,6 @@ def preprocess_pipeline(
     print(f"Features: {len(preprocessor.feature_cols)}")
     print(f"Removed features: {len(preprocessor.removed_sensors)}")
     print("="*70 + "\n")
-
     return train_df, val_df, test_df, preprocessor
 
 

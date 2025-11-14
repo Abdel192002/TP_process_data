@@ -73,13 +73,9 @@ def create_shap_explainer(predict_fn, background_data):
 
     Returns:
         explainer: SHAP KernelExplainer object
-
-    Example:
-        >>> explainer = create_shap_explainer(predict_fn, X_train[:100])
     """
-    # TODO 1: Students complete this
-    # HINT: Use shap.KernelExplainer
-    raise NotImplementedError("TODO 1: Create SHAP KernelExplainer")
+    explainer = shap.KernelExplainer(predict_fn, background_data)
+    return explainer
 
 
 def calculate_shap_values(explainer, X, nsamples=50):
