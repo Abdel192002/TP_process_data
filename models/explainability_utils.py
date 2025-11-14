@@ -95,7 +95,8 @@ def calculate_shap_values(explainer, X, nsamples=50):
     """
     # TODO 2: Students complete this
     # HINT: Use explainer.shap_values(X, nsamples=...)
-    raise NotImplementedError("TODO 2: Calculate SHAP values")
+    shap_values = explainer.shap_values(X, nsamples=nsamples)
+    return shap_values
 
 
 def create_lime_explainer(background_data, feature_names, mode='regression'):
