@@ -173,7 +173,20 @@ def compare_shap_lime(shap_values, lime_weights, feature_names):
     # TODO 5: Students complete this
     # HINT: Convert lime_weights dict to array matching feature order
     # HINT: Check sign agreement: (shap * lime) >= 0
-    raise NotImplementedError("TODO 5: Compare SHAP vs LIME")
+    lime_array = np.array([lime_weights.get(f, 0) for f in feature_names])
+
+    # Determine sign agreement: shap * lime >= 0 means same sign
+    sign_agreement = shap_values * lime_array >= 0
+
+    # Compute agreement rate
+    agreement_rate = np.mean(sign_agreement)
+
+    # Collect names of disagreeing features
+    disagreeing_features = [
+        feature_names[i] for i, agree in enumerate(sign_agreement) if not agree
+    ]
+
+    return agreement_rate, disagreeing_features
 
 
 def interpret_for_engineer(shap_values, feature_names, error, threshold, is_anomaly, top_n=3):
