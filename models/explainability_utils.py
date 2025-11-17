@@ -173,19 +173,23 @@ def compare_shap_lime(shap_values, lime_weights, feature_names):
     # TODO 5: Students complete this
     # HINT: Convert lime_weights dict to array matching feature order
     # HINT: Check sign agreement: (shap * lime) >= 0
-    lime_array = np.array([lime_weights.get(f, 0) for f in feature_names])
-
-    # Determine sign agreement: shap * lime >= 0 means same sign
-    sign_agreement = shap_values * lime_array >= 0
-
-    # Compute agreement rate
-    agreement_rate = np.mean(sign_agreement)
-
-    # Collect names of disagreeing features
-    disagreeing_features = [
-        feature_names[i] for i, agree in enumerate(sign_agreement) if not agree
-    ]
-
+    
+    # Convert LIME dict to array (matching feature order)
+    lime_array = np.zeros(len(feature_names))
+    for i, feat in enumerate(feature_names):
+        lime_array[i] = lime_weights.get(feat, 0.0)
+    
+    # Check sign agreement: (shap * lime) >= 0
+    # Positive if same sign, negative if opposite
+    agreements = (shap_values * lime_array) >= 0
+    
+    # Agreement rate
+    agreement_rate = agreements.sum() / len(agreements)
+    
+    # Find disagreements
+    disagreement_indices = np.where(~agreements)[0]
+    disagreeing_features = [feature_names[i] for i in disagreement_indices]
+    
     return agreement_rate, disagreeing_features
 
 
