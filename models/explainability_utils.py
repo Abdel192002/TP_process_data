@@ -192,7 +192,6 @@ def compare_shap_lime(shap_values, lime_weights, feature_names):
     
     return agreement_rate, disagreeing_features
 
-
 def interpret_for_engineer(shap_values, feature_names, error, threshold, is_anomaly, top_n=3):
     """
     Create engineer-friendly interpretation of ML prediction.
@@ -207,20 +206,49 @@ def interpret_for_engineer(shap_values, feature_names, error, threshold, is_anom
 
     Returns:
         interpretation: String with engineer-friendly report
-
-    Example:
-        >>> report = interpret_for_engineer(shap_vals, features, 0.42, 0.31, True)
-        >>> print(report)
     """
-    # TODO 6: Students complete this
-    # HINT: Identify top N most important sensors
-    # HINT: Explain what they mean in plain language
-    # HINT: Provide actionable recommendations
-    raise NotImplementedError("TODO 6: Create engineer interpretation")
 
+    # Convert SHAP values to absolute for ranking
+    abs_vals = np.abs(shap_values)
 
-# Helper functions (PROVIDED to students)
+    # Get indices of most impactful features
+    top_idx = np.argsort(abs_vals)[-top_n:][::-1]
 
+    explanation_lines = []
+    explanation_lines.append("🔍 **Diagnostic Machine Learning**")
+    explanation_lines.append(f"- Reconstruction error: **{error:.4f}**")
+    explanation_lines.append(f"- Anomaly threshold: **{threshold:.4f}**")
+
+    if is_anomaly:
+        explanation_lines.append("➡️ **Status: ANOMALY detected** ⚠️")
+    else:
+        explanation_lines.append("➡️ **Status: Normal behavior** ✔️")
+
+    explanation_lines.append("")
+    explanation_lines.append(f"📊 **Top {top_n} contributing sensors:**")
+
+    # List sensor contributions
+    for i in top_idx:
+        sensor = feature_names[i]
+        value = shap_values[i]
+        direction = "↑ increase" if value > 0 else "↓ decrease"
+        explanation_lines.append(f"- **{sensor}** contributed {value:.4f} ({direction})")
+
+    # Actionable recommendations
+    explanation_lines.append("\n🛠 **Recommendations:**")
+
+    if is_anomaly:
+        explanation_lines.append("- Inspect the top contributing sensors first.")
+        explanation_lines.append("- Check for sensor drift, noise, or calibration issues.")
+        explanation_lines.append("- Compare behavior with historical normal operation.")
+        explanation_lines.append("- If persistent, consider maintenance / inspection.")
+    else:
+        explanation_lines.append("- System operating within normal patterns.")
+        explanation_lines.append("- No action required at this time.")
+        explanation_lines.append("- Continue routine monitoring.")
+
+    # Produces one clean string
+    return "\n".join(explanation_lines)
 def get_top_features(shap_values, feature_names, n=5):
     """
     Get top N features by absolute SHAP value.
